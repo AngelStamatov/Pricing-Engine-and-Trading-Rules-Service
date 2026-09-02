@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NoDefaultLaunchSettingsFile>True</NoDefaultLaunchSettingsFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PricingAndTrading.Application\PricingAndTrading.Application.csproj" />
+    <ProjectReference Include="..\PricingAndTrading.Infrastructure\PricingAndTrading.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
