@@ -4,9 +4,9 @@ using TradingRulesConfiguration = PricingAndTrading.Domain.TradingRules.TradingR
 
 namespace PricingAndTrading.Application.TradingRules;
 
-public interface ITradingRulesEngine
+public interface ITradingRule
 {
-    TradeValidationResult Evaluate(
+    RejectionReason? Evaluate(
         Order order,
         MarketPrice marketPrice,
         TradingRulesConfiguration tradingRules);
