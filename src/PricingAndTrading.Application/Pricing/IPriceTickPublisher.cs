@@ -2,9 +2,9 @@ using PricingAndTrading.Domain.Prices;
 
 namespace PricingAndTrading.Application.Pricing;
 
-public interface IPriceProcessor
+public interface IPriceTickPublisher
 {
-    ValueTask ProcessAsync(
+    ValueTask PublishAsync(
         PriceTick priceTick,
         CancellationToken cancellationToken = default);
 }
