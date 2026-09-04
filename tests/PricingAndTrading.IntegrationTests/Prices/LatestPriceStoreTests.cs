@@ -89,6 +89,36 @@ public sealed class LatestPriceStoreTests
         Assert.Contains(store.GetLatest("EURUSD"), prices);
     }
 
+    [Fact]
+    public void GetSnapshot_CurrentPrices_ReturnsAllLatestValues()
+    {
+        var store = new LatestPriceStore();
+        MarketPrice eurUsd = CreateMarketPrice("EURUSD", 99m, 101m);
+        MarketPrice gbpUsd = CreateMarketPrice("GBPUSD", 119m, 121m);
+        store.Update(eurUsd);
+        store.Update(gbpUsd);
+
+        IReadOnlyCollection<MarketPrice> snapshot = store.GetSnapshot();
+
+        Assert.Equal(2, snapshot.Count);
+        Assert.Contains(eurUsd, snapshot);
+        Assert.Contains(gbpUsd, snapshot);
+    }
+
+    [Fact]
+    public void GetSnapshot_CallerMutatesSnapshot_DoesNotMutateStoreState()
+    {
+        var store = new LatestPriceStore();
+        MarketPrice original = CreateMarketPrice("EURUSD", 99m, 101m);
+        MarketPrice replacement = CreateMarketPrice("EURUSD", 100m, 102m);
+        store.Update(original);
+        MarketPrice[] snapshot = Assert.IsType<MarketPrice[]>(store.GetSnapshot());
+
+        snapshot[0] = replacement;
+
+        Assert.Same(original, store.GetLatest("EURUSD"));
+    }
+
     private static MarketPrice CreateMarketPrice(
         string symbol,
         decimal bidPrice,

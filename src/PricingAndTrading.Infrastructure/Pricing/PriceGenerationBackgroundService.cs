@@ -23,16 +23,20 @@ public sealed class PriceGenerationBackgroundService : BackgroundService
 
     private readonly IPriceTickPublisher _pricePublisher;
     private readonly SimulatedPriceGenerator _priceGenerator;
+    private readonly ILatestPriceProvider _latestPriceProvider;
 
     public PriceGenerationBackgroundService(
         IPriceTickPublisher pricePublisher,
-        SimulatedPriceGenerator priceGenerator)
+        SimulatedPriceGenerator priceGenerator,
+        ILatestPriceProvider latestPriceProvider)
     {
         ArgumentNullException.ThrowIfNull(pricePublisher);
         ArgumentNullException.ThrowIfNull(priceGenerator);
+        ArgumentNullException.ThrowIfNull(latestPriceProvider);
 
         _pricePublisher = pricePublisher;
         _priceGenerator = priceGenerator;
+        _latestPriceProvider = latestPriceProvider;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,7 +44,8 @@ public sealed class PriceGenerationBackgroundService : BackgroundService
         IEnumerable<Task> producerTasks = Markets.Select(market =>
             GeneratePricesAsync(
                 market.Symbol,
-                market.InitialMarketPrice,
+                _latestPriceProvider.GetLatest(market.Symbol)?.CurrentMarketPrice
+                    ?? market.InitialMarketPrice,
                 stoppingToken));
 
         return Task.WhenAll(producerTasks);

@@ -14,7 +14,8 @@ public sealed class PricingBackgroundServiceTests
 
         var service = new PriceGenerationBackgroundService(
             publisher,
-            new SimulatedPriceGenerator());
+            new SimulatedPriceGenerator(),
+            new StubLatestPriceProvider());
 
         Assert.NotNull(service);
     }
@@ -25,7 +26,8 @@ public sealed class PricingBackgroundServiceTests
         Assert.Throws<ArgumentNullException>(() =>
             new PriceGenerationBackgroundService(
                 null!,
-                new SimulatedPriceGenerator()));
+                new SimulatedPriceGenerator(),
+                new StubLatestPriceProvider()));
     }
 
     [Fact]
@@ -34,6 +36,17 @@ public sealed class PricingBackgroundServiceTests
         Assert.Throws<ArgumentNullException>(() =>
             new PriceGenerationBackgroundService(
                 new StubPriceTickPublisher(),
+                null!,
+                new StubLatestPriceProvider()));
+    }
+
+    [Fact]
+    public void PriceGenerationBackgroundService_NullLatestPriceProvider_ThrowsArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+            new PriceGenerationBackgroundService(
+                new StubPriceTickPublisher(),
+                new SimulatedPriceGenerator(),
                 null!));
     }
 
@@ -79,5 +92,10 @@ public sealed class PricingBackgroundServiceTests
             PriceTick priceTick,
             CancellationToken cancellationToken = default) =>
             ValueTask.CompletedTask;
+    }
+
+    private sealed class StubLatestPriceProvider : ILatestPriceProvider
+    {
+        public MarketPrice? GetLatest(string symbol) => null;
     }
 }

@@ -4,7 +4,9 @@ using PricingAndTrading.Domain.Prices;
 
 namespace PricingAndTrading.Infrastructure.RuntimeState;
 
-public sealed class LatestPriceStore : ILatestPriceStore
+public sealed class LatestPriceStore :
+    ILatestPriceStore,
+    ILatestPriceSnapshotProvider
 {
     private readonly ConcurrentDictionary<string, MarketPrice> _prices =
         new(StringComparer.Ordinal);
@@ -41,4 +43,7 @@ public sealed class LatestPriceStore : ILatestPriceStore
             }
         }
     }
+
+    public IReadOnlyCollection<MarketPrice> GetSnapshot() =>
+        _prices.Values.ToArray();
 }
