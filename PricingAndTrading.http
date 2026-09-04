@@ -1,0 +1,53 @@
+@baseUrl = http://localhost:5000
+
+### Get current trading rules
+GET {{baseUrl}}/api/trading-rules
+
+### Get the latest in-memory price
+GET {{baseUrl}}/api/prices/EURUSD
+
+### Submit an order (the response may be Accepted or Rejected by current rules)
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "orderId": "11111111-1111-1111-1111-111111111111",
+  "symbol": "EURUSD",
+  "side": "Buy",
+  "type": "Limit",
+  "price": 100.00,
+  "quantity": 5.00
+}
+
+### Submit an order likely to be rejected by the maximum quantity rule
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "orderId": "22222222-2222-2222-2222-222222222222",
+  "symbol": "EURUSD",
+  "side": "Sell",
+  "type": "Limit",
+  "price": 100.00,
+  "quantity": 10001.00
+}
+
+### Replace the active trading-rules snapshot
+PUT {{baseUrl}}/api/trading-rules
+Content-Type: application/json
+
+{
+  "maximumNotionalAmount": 100000,
+  "maximumQuantity": 10000,
+  "maximumPriceDeviationPercent": 0.8,
+  "duplicateOrderIdCheckEnabled": true,
+  "symbolWhitelistEnabled": false,
+  "symbolWhitelist": ["EURUSD", "GBPUSD"],
+  "autoTradingSpreadThresholdPercent": 0.02
+}
+
+### Get filtered trade history
+GET {{baseUrl}}/api/trades/history?symbol=EURUSD&status=Accepted&page=1&pageSize=50
+
+### Get order history for one symbol
+GET {{baseUrl}}/api/orders/EURUSD/history?page=1&pageSize=50

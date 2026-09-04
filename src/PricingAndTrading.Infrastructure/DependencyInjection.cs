@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PricingAndTrading.Application.Abstractions;
 using PricingAndTrading.Application.AutoTrading;
 using PricingAndTrading.Application.Orders;
+using PricingAndTrading.Application.Orders.History;
 using PricingAndTrading.Application.Pricing;
 using PricingAndTrading.Application.TradingRules;
 using PricingAndTrading.Infrastructure.Persistence;
@@ -54,6 +55,7 @@ public static class DependencyInjection
             provider.GetRequiredService<TradingRulesStore>());
 
         services.AddSingleton<IOrderRepository, PostgresOrderRepository>();
+        services.AddSingleton<IOrderHistoryRepository, PostgresOrderHistoryRepository>();
         services.AddSingleton<IOrderIdRegistry, PostgresOrderIdRegistry>();
         services.AddSingleton<ITradingRulesRepository, PostgresTradingRulesRepository>();
         services.AddSingleton<IPriceStateRepository, PostgresPriceStateRepository>();
@@ -62,6 +64,7 @@ public static class DependencyInjection
         services.AddSingleton<IAutoTradingEngine, AutoTradingEngine>();
         services.AddSingleton<IOrderProcessor, OrderProcessor>();
         services.AddSingleton<ITradingRulesEngine, TradingRulesEngine>();
+        services.AddSingleton<ITradingRulesUpdater, TradingRulesUpdater>();
 
         services.AddSingleton<ChannelPriceFeed>();
         services.AddSingleton<IPriceFeed>(provider =>

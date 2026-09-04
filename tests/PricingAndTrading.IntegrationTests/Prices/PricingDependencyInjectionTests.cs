@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PricingAndTrading.Application.Abstractions;
 using PricingAndTrading.Application.AutoTrading;
 using PricingAndTrading.Application.Orders;
+using PricingAndTrading.Application.Orders.History;
 using PricingAndTrading.Application.Pricing;
 using PricingAndTrading.Application.TradingRules;
 using PricingAndTrading.Infrastructure;
@@ -71,11 +72,13 @@ public sealed class PricingDependencyInjectionTests
         Assert.NotNull(
             provider.GetRequiredService<IDbContextFactory<TradingDbContext>>());
         Assert.NotNull(provider.GetRequiredService<IOrderRepository>());
+        Assert.NotNull(provider.GetRequiredService<IOrderHistoryRepository>());
         Assert.NotNull(provider.GetRequiredService<IOrderIdRegistry>());
         Assert.NotNull(provider.GetRequiredService<ITradingRulesRepository>());
         Assert.NotNull(provider.GetRequiredService<IPriceStateRepository>());
         Assert.NotNull(provider.GetRequiredService<IOrderProcessor>());
         Assert.NotNull(provider.GetRequiredService<IPriceProcessor>());
+        Assert.NotNull(provider.GetRequiredService<ITradingRulesUpdater>());
     }
 
     [Fact]
